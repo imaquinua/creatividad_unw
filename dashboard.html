@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Status de Piezas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --pendiente: #FFA726;
+            --en-proceso: #42A5F5;
+            --listo: #66BB6A;
+            --cancelado: #EF5350;
+            --bg-primary: #f5f7fa;
+            --bg-card: #ffffff;
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --border: #e1e8ed;
+            --shadow: rgba(0, 0, 0, 0.08);
+            --accent: #5e72e4;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* Tabs de Vista */
+        .view-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            background: var(--bg-card);
+            padding: 0.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px var(--shadow);
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 150px;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-btn:hover {
+            background: var(--bg-primary);
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* Filtros */
+        .filters {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        select, input {
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: border-color 0.2s;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        input[type="search"] {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .date-input-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        input[type="date"] {
+            min-width: 180px;
+            cursor: pointer;
+            position: relative;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+        }
+
+        input[type="date"]:hover {
+            border-color: var(--accent);
+            box-shadow: 0 2px 8px rgba(94, 114, 228, 0.1);
+        }
+
+        input[type="date"]:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.1);
+        }
+
+        /* Icono del calendario */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%235e72e4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Cline x1='16' y1='2' x2='16' y2='6'%3E%3C/line%3E%3Cline x1='8' y1='2' x2='8' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='10' x2='21' y2='10'%3E%3C/line%3E%3C/svg%3E");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: 18px;
+            width: 36px;
+            height: 36px;
+            opacity: 1;
+            margin-left: 0.25rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator:hover {
+            background-color: rgba(94, 114, 228, 0.1);
+            transform: scale(1.1);
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator:active {
+            background-color: rgba(94, 114, 228, 0.2);
+            transform: scale(0.95);
+        }
+
+        /* Texto del input */
+        input[type="date"]::-webkit-datetime-edit {
+            padding: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        input[type="date"]::-webkit-datetime-edit-fields-wrapper {
+            padding: 0;
+        }
+
+        input[type="date"]::-webkit-datetime-edit-text {
+            padding: 0 0.15rem;
+            color: var(--text-secondary);
+        }
+
+        input[type="date"]::-webkit-datetime-edit-month-field,
+        input[type="date"]::-webkit-datetime-edit-day-field,
+        input[type="date"]::-webkit-datetime-edit-year-field {
+            padding: 0.15rem 0.25rem;
+            border-radius: 4px;
+            color: var(--text-primary);
+        }
+
+        input[type="date"]::-webkit-datetime-edit-month-field:focus,
+        input[type="date"]::-webkit-datetime-edit-day-field:focus,
+        input[type="date"]::-webkit-datetime-edit-year-field:focus {
+            background: rgba(94, 114, 228, 0.1);
+            color: var(--accent);
+            outline: none;
+        }
+
+        /* Placeholder personalizado */
+        input[type="date"]::before {
+            content: attr(data-placeholder);
+            color: var(--text-secondary);
+            margin-right: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        input[type="date"]:focus::before,
+        input[type="date"]:valid::before {
+            display: none;
+        }
+
+        /* Estilos para el calendario desplegable nativo */
+        input[type="date"]::-webkit-inner-spin-button {
+            display: none;
+        }
+
+        input[type="date"]::-webkit-clear-button {
+            display: none;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px var(--shadow);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .stat-card.pendiente .stat-value { color: var(--pendiente); }
+        .stat-card.en-proceso .stat-value { color: var(--en-proceso); }
+        .stat-card.listo .stat-value { color: var(--listo); }
+        .stat-card.cancelado .stat-value { color: var(--cancelado); }
+        .stat-card.total .stat-value { color: var(--accent); }
+
+        /* Charts Section */
+        .charts-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .chart-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .chart-card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .chart-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .chart-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 250px;
+        }
+
+        /* Responsables Bento Grid */
+        .responsables-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-auto-rows: 140px;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .responsable-card {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px var(--shadow);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .responsable-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--listo));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .responsable-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .responsable-card:hover::before {
+            opacity: 1;
+        }
+
+        .responsable-card.size-1 {
+            grid-column: span 1;
+            grid-row: span 1;
+        }
+
+        .responsable-card.size-2 {
+            grid-column: span 2;
+            grid-row: span 1;
+        }
+
+        .responsable-card.size-3 {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        .responsable-card.size-4 {
+            grid-column: span 3;
+            grid-row: span 2;
+        }
+
+        .responsable-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .responsable-info {
+            flex: 1;
+        }
+
+        .responsable-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+            line-height: 1.3;
+        }
+
+        .responsable-card.size-3 .responsable-name,
+        .responsable-card.size-4 .responsable-name {
+            font-size: 1.25rem;
+        }
+
+        .responsable-total {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent);
+            line-height: 1;
+        }
+
+        .responsable-card.size-3 .responsable-total,
+        .responsable-card.size-4 .responsable-total {
+            font-size: 3rem;
+        }
+
+        .responsable-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .responsable-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .responsable-stats {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .responsable-card.size-3 .responsable-stats,
+        .responsable-card.size-4 .responsable-stats {
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .resp-stat {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.5rem;
+            background: var(--bg-primary);
+            border-radius: 8px;
+        }
+
+        .resp-stat-label {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
+            letter-spacing: 0.5px;
+        }
+
+        .resp-stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .responsable-card.size-3 .resp-stat-value,
+        .responsable-card.size-4 .resp-stat-value {
+            font-size: 1.75rem;
+        }
+
+        .resp-stat.pendiente .resp-stat-value { color: var(--pendiente); }
+        .resp-stat.en-proceso .resp-stat-value { color: var(--en-proceso); }
+        .resp-stat.listo .resp-stat-value { color: var(--listo); }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-primary);
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .responsable-card.size-3 .progress-bar,
+        .responsable-card.size-4 .progress-bar {
+            height: 12px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--listo) 0%, #4CAF50 100%);
+            border-radius: 4px;
+            transition: width 0.5s ease-in-out;
+            box-shadow: 0 0 10px rgba(102, 187, 106, 0.3);
+        }
+
+        .progress-percentage {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            background: var(--bg-primary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+        }
+
+        .responsable-card.size-3 .progress-percentage,
+        .responsable-card.size-4 .progress-percentage {
+            font-size: 1.125rem;
+            padding: 0.5rem 0.75rem;
+        }
+
+        /* Table */
+        .table-container {
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px var(--shadow);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: var(--bg-primary);
+        }
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 1rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.875rem;
+        }
+
+        tbody tr {
+            transition: background 0.2s;
+        }
+
+        tbody tr:hover {
+            background: var(--bg-primary);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-pendiente {
+            background: rgba(255, 167, 38, 0.15);
+            color: var(--pendiente);
+        }
+
+        .status-en-proceso {
+            background: rgba(66, 165, 245, 0.15);
+            color: var(--en-proceso);
+        }
+
+        .status-listo {
+            background: rgba(102, 187, 106, 0.15);
+            color: var(--listo);
+        }
+
+        .status-cancelado {
+            background: rgba(239, 83, 80, 0.15);
+            color: var(--cancelado);
+        }
+
+        .producto-tag {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            background: var(--bg-primary);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+
+            .responsables-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                grid-auto-rows: 120px;
+            }
+
+            .responsable-card {
+                padding: 1rem;
+            }
+
+            .responsable-card.size-2,
+            .responsable-card.size-3,
+            .responsable-card.size-4 {
+                grid-column: span 1;
+                grid-row: span 1;
+            }
+
+            .responsable-total {
+                font-size: 1.5rem;
+            }
+
+            .resp-stat {
+                padding: 0.35rem;
+            }
+
+            .resp-stat-label {
+                font-size: 0.6rem;
+            }
+
+            .resp-stat-value {
+                font-size: 1rem;
+            }
+
+            .view-tabs {
+                overflow-x: auto;
+            }
+
+            .tab-btn {
+                min-width: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Dashboard de Piezas</h1>
+            <p class="subtitle">Seguimiento en Tiempo Real</p>
+        </header>
+
+        <!-- Tabs de Vista -->
+        <div class="view-tabs">
+            <button class="tab-btn active" onclick="switchView('general')">General</button>
+            <button class="tab-btn" onclick="switchView('responsables')">Por Responsable</button>
+            <button class="tab-btn" onclick="switchView('estados')">Por Estado</button>
+            <button class="tab-btn" onclick="switchView('productos')">Por Producto</button>
+        </div>
+
+        <!-- Filtros -->
+        <div class="filters">
+            <div class="filter-group">
+                <span class="filter-label">Filtros:</span>
+                <select id="productoFilter" onchange="applyFilters()">
+                    <option value="">Todos los productos</option>
+                </select>
+                <select id="statusFilter" onchange="applyFilters()">
+                    <option value="">Todos los estados</option>
+                    <option value="pendiente">Pendiente</option>
+                    <option value="en proceso">En Proceso</option>
+                    <option value="listo">Listo</option>
+                    <option value="cancelado">Cancelado</option>
+                </select>
+                <select id="responsableFilter" onchange="applyFilters()">
+                    <option value="">Todos los responsables</option>
+                </select>
+                <input type="date" id="fechaDesde" onchange="applyFilters()" data-placeholder="📅 Desde">
+                <input type="date" id="fechaHasta" onchange="applyFilters()" data-placeholder="📅 Hasta">
+                <input type="search" id="searchInput" placeholder="Buscar..." oninput="applyFilters()">
+            </div>
+        </div>
+
+        <!-- Vista General -->
+        <div id="generalView" class="view-section active">
+            <div class="stats-grid" id="statsGrid"></div>
+
+            <div class="charts-section">
+                <div class="chart-card">
+                    <h3 class="chart-title">Distribución por Estado</h3>
+                    <div class="chart-container">
+                        <canvas id="statusChart" width="250" height="250"></canvas>
+                    </div>
+                    <div class="legend" id="statusLegend"></div>
+                </div>
+
+                <div class="chart-card">
+                    <h3 class="chart-title">Progreso por Producto</h3>
+                    <div class="chart-container">
+                        <canvas id="productChart" width="400" height="250"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <h3 class="chart-title">Top Responsables</h3>
+                    <div class="chart-container">
+                        <canvas id="responsableChart" width="400" height="250"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>N°</th>
+                            <th>Pendiente</th>
+                            <th>Responsable</th>
+                            <th>Estado</th>
+                            <th>Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tasksTableBody">
+                        <tr><td colspan="6" class="no-data">Cargando datos...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Vista Por Responsables -->
+        <div id="responsablesView" class="view-section">
+            <div class="responsables-grid" id="responsablesGrid"></div>
+        </div>
+
+        <!-- Vista Por Estados -->
+        <div id="estadosView" class="view-section">
+            <div class="stats-grid" id="estadosStats"></div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>N°</th>
+                            <th>Pendiente</th>
+                            <th>Responsable</th>
+                            <th>Estado</th>
+                            <th>Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody id="estadosTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Vista Por Productos -->
+        <div id="productosView" class="view-section">
+            <div class="charts-section">
+                <div class="chart-card full-width">
+                    <h3 class="chart-title">Distribución por Productos</h3>
+                    <div class="chart-container">
+                        <canvas id="productosChart" width="800" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Total</th>
+                            <th>Pendientes</th>
+                            <th>En Proceso</th>
+                            <th>Listo</th>
+                            <th>% Completado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productosTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allTasks = [];
+        let filteredTasks = [];
+        let currentView = 'general';
+
+        // Cargar datos
+        async function loadData() {
+            try {
+                const response = await fetch('data.json');
+                const data = await response.json();
+                allTasks = data;
+                filteredTasks = [...allTasks];
+                initializeDashboard();
+            } catch (error) {
+                console.error('Error al cargar datos:', error);
+                document.getElementById('tasksTableBody').innerHTML =
+                    '<tr><td colspan="6" class="no-data">Error al cargar los datos</td></tr>';
+            }
+        }
+
+        function initializeDashboard() {
+            populateFilters();
+            updateAllViews();
+        }
+
+        function populateFilters() {
+            // Productos
+            const productos = [...new Set(allTasks.map(t => t.producto))].sort();
+            const productoSelect = document.getElementById('productoFilter');
+            productoSelect.innerHTML = '<option value="">Todos los productos</option>' +
+                productos.map(p => `<option value="${p}">${p}</option>`).join('');
+
+            // Responsables
+            const responsables = [...new Set(allTasks.map(t => t.responsable).filter(r => r && r !== 'nan'))].sort();
+            const responsableSelect = document.getElementById('responsableFilter');
+            responsableSelect.innerHTML = '<option value="">Todos los responsables</option>' +
+                responsables.map(r => `<option value="${r}">${r}</option>`).join('');
+        }
+
+        function applyFilters() {
+            const productoFilter = document.getElementById('productoFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+            const responsableFilter = document.getElementById('responsableFilter').value;
+            const fechaDesde = document.getElementById('fechaDesde').value;
+            const fechaHasta = document.getElementById('fechaHasta').value;
+            const searchFilter = document.getElementById('searchInput').value.toLowerCase();
+
+            filteredTasks = allTasks.filter(task => {
+                if (productoFilter && task.producto !== productoFilter) return false;
+                if (statusFilter && task.status !== statusFilter) return false;
+                if (responsableFilter && task.responsable !== responsableFilter) return false;
+
+                // Filtro de fechas
+                if (fechaDesde || fechaHasta) {
+                    const taskDate = task.fecha ? new Date(task.fecha.split('-').join('-')) : null;
+                    if (taskDate) {
+                        if (fechaDesde && taskDate < new Date(fechaDesde)) return false;
+                        if (fechaHasta && taskDate > new Date(fechaHasta)) return false;
+                    } else if (fechaDesde || fechaHasta) {
+                        return false; // Excluir tareas sin fecha si hay filtro de fecha activo
+                    }
+                }
+
+                if (searchFilter) {
+                    const searchText = `${task.pendiente} ${task.responsable} ${task.detalle}`.toLowerCase();
+                    if (!searchText.includes(searchFilter)) return false;
+                }
+                return true;
+            });
+
+            updateAllViews();
+        }
+
+        function switchView(view) {
+            currentView = view;
+
+            // Update tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update sections
+            document.querySelectorAll('.view-section').forEach(section => section.classList.remove('active'));
+            document.getElementById(view + 'View').classList.add('active');
+
+            updateAllViews();
+        }
+
+        function updateAllViews() {
+            updateStats();
+            updateGeneralView();
+            updateResponsablesView();
+            updateEstadosView();
+            updateProductosView();
+        }
+
+        function updateStats() {
+            const stats = {
+                total: filteredTasks.length,
+                pendiente: filteredTasks.filter(t => t.status === 'pendiente').length,
+                proceso: filteredTasks.filter(t => t.status === 'en proceso').length,
+                listo: filteredTasks.filter(t => t.status === 'listo').length,
+                cancelado: filteredTasks.filter(t => t.status === 'cancelado').length
+            };
+
+            const statsHTML = `
+                <div class="stat-card total" onclick="filterByStatus('')">
+                    <div class="stat-label">Total Tareas</div>
+                    <div class="stat-value">${stats.total}</div>
+                </div>
+                <div class="stat-card pendiente" onclick="filterByStatus('pendiente')">
+                    <div class="stat-label">Pendientes</div>
+                    <div class="stat-value">${stats.pendiente}</div>
+                </div>
+                <div class="stat-card en-proceso" onclick="filterByStatus('en proceso')">
+                    <div class="stat-label">En Proceso</div>
+                    <div class="stat-value">${stats.proceso}</div>
+                </div>
+                <div class="stat-card listo" onclick="filterByStatus('listo')">
+                    <div class="stat-label">Completadas</div>
+                    <div class="stat-value">${stats.listo}</div>
+                </div>
+            `;
+
+            document.getElementById('statsGrid').innerHTML = statsHTML;
+        }
+
+        function filterByStatus(status) {
+            document.getElementById('statusFilter').value = status;
+            applyFilters();
+        }
+
+        function updateGeneralView() {
+            drawStatusChart();
+            drawProductChart();
+            drawResponsableChart();
+            renderTable();
+        }
+
+        function drawStatusChart() {
+            const canvas = document.getElementById('statusChart');
+            const ctx = canvas.getContext('2d');
+
+            const stats = {
+                'Pendiente': { count: filteredTasks.filter(t => t.status === 'pendiente').length, color: '#FFA726' },
+                'En Proceso': { count: filteredTasks.filter(t => t.status === 'en proceso').length, color: '#42A5F5' },
+                'Listo': { count: filteredTasks.filter(t => t.status === 'listo').length, color: '#66BB6A' },
+                'Cancelado': { count: filteredTasks.filter(t => t.status === 'cancelado').length, color: '#EF5350' }
+            };
+
+            const total = Object.values(stats).reduce((sum, s) => sum + s.count, 0);
+            if (total === 0) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                return;
+            }
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = 80;
+            const innerRadius = 50;
+
+            let currentAngle = -Math.PI / 2;
+
+            for (const [label, data] of Object.entries(stats)) {
+                if (data.count === 0) continue;
+
+                const sliceAngle = (data.count / total) * 2 * Math.PI;
+
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle);
+                ctx.arc(centerX, centerY, innerRadius, currentAngle + sliceAngle, currentAngle, true);
+                ctx.closePath();
+                ctx.fillStyle = data.color;
+                ctx.fill();
+
+                currentAngle += sliceAngle;
+            }
+
+            ctx.fillStyle = '#2c3e50';
+            ctx.font = 'bold 32px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(total, centerX, centerY);
+            ctx.font = '12px sans-serif';
+            ctx.fillStyle = '#7f8c8d';
+            ctx.fillText('Total', centerX, centerY + 20);
+
+            const legendHTML = Object.entries(stats)
+                .filter(([_, data]) => data.count > 0)
+                .map(([label, data]) => `
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: ${data.color}"></div>
+                        <span>${label}: ${data.count}</span>
+                    </div>
+                `).join('');
+            document.getElementById('statusLegend').innerHTML = legendHTML;
+        }
+
+        function drawProductChart() {
+            const canvas = document.getElementById('productChart');
+            const ctx = canvas.getContext('2d');
+
+            const productStats = {};
+            filteredTasks.forEach(task => {
+                if (!productStats[task.producto]) {
+                    productStats[task.producto] = { listo: 0, total: 0 };
+                }
+                productStats[task.producto].total++;
+                if (task.status === 'listo') {
+                    productStats[task.producto].listo++;
+                }
+            });
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const products = Object.keys(productStats);
+            const barHeight = 30;
+            const barSpacing = 10;
+            const maxWidth = 300;
+            const startX = 80;
+            const startY = 20;
+
+            products.forEach((product, index) => {
+                const y = startY + index * (barHeight + barSpacing);
+                const stat = productStats[product];
+                const percentage = stat.total > 0 ? (stat.listo / stat.total) * 100 : 0;
+                const barWidth = (percentage / 100) * maxWidth;
+
+                ctx.fillStyle = '#7f8c8d';
+                ctx.font = '11px sans-serif';
+                ctx.textAlign = 'right';
+                ctx.fillText(product.substring(0, 20), startX - 5, y + barHeight / 2 + 4);
+
+                ctx.fillStyle = '#e1e8ed';
+                ctx.fillRect(startX, y, maxWidth, barHeight);
+
+                ctx.fillStyle = '#66BB6A';
+                ctx.fillRect(startX, y, barWidth, barHeight);
+
+                ctx.fillStyle = '#2c3e50';
+                ctx.font = 'bold 11px sans-serif';
+                ctx.textAlign = 'left';
+                ctx.fillText(`${Math.round(percentage)}%`, startX + maxWidth + 10, y + barHeight / 2 + 4);
+            });
+        }
+
+        function drawResponsableChart() {
+            const canvas = document.getElementById('responsableChart');
+            const ctx = canvas.getContext('2d');
+
+            const responsableStats = {};
+            filteredTasks.forEach(task => {
+                const resp = task.responsable || 'Sin asignar';
+                if (!responsableStats[resp]) {
+                    responsableStats[resp] = 0;
+                }
+                responsableStats[resp]++;
+            });
+
+            const sorted = Object.entries(responsableStats)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 6);
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const barHeight = 30;
+            const barSpacing = 10;
+            const maxWidth = 200;
+            const startX = 120;
+            const startY = 10;
+            const maxValue = Math.max(...sorted.map(s => s[1]));
+
+            sorted.forEach(([responsable, count], index) => {
+                const y = startY + index * (barHeight + barSpacing);
+                const barWidth = (count / maxValue) * maxWidth;
+
+                ctx.fillStyle = '#7f8c8d';
+                ctx.font = '11px sans-serif';
+                ctx.textAlign = 'right';
+                ctx.fillText(responsable.substring(0, 15), startX - 5, y + barHeight / 2 + 4);
+
+                const gradient = ctx.createLinearGradient(startX, 0, startX + barWidth, 0);
+                gradient.addColorStop(0, '#5e72e4');
+                gradient.addColorStop(1, '#825ee4');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(startX, y, barWidth, barHeight);
+
+                ctx.fillStyle = '#2c3e50';
+                ctx.font = 'bold 11px sans-serif';
+                ctx.textAlign = 'left';
+                ctx.fillText(count, startX + barWidth + 10, y + barHeight / 2 + 4);
+            });
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('tasksTableBody');
+
+            if (filteredTasks.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="no-data">No se encontraron tareas</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = filteredTasks.map(task => `
+                <tr>
+                    <td><span class="producto-tag">${task.producto}</span></td>
+                    <td>${task.numero}</td>
+                    <td>${task.pendiente}</td>
+                    <td>${task.responsable}</td>
+                    <td><span class="status-badge status-${task.status.replace(' ', '-')}">${task.status}</span></td>
+                    <td>${task.fecha}</td>
+                </tr>
+            `).join('');
+        }
+
+        function updateResponsablesView() {
+            const responsableStats = {};
+
+            filteredTasks.forEach(task => {
+                const resp = task.responsable || 'Sin asignar';
+                if (!responsableStats[resp]) {
+                    responsableStats[resp] = {
+                        total: 0,
+                        pendiente: 0,
+                        proceso: 0,
+                        listo: 0
+                    };
+                }
+                responsableStats[resp].total++;
+                if (task.status === 'pendiente') responsableStats[resp].pendiente++;
+                if (task.status === 'en proceso') responsableStats[resp].proceso++;
+                if (task.status === 'listo') responsableStats[resp].listo++;
+            });
+
+            const sorted = Object.entries(responsableStats)
+                .sort((a, b) => b[1].total - a[1].total);
+
+            // Calcular tamaño de las cajas basado en la carga de trabajo
+            const maxTasks = sorted.length > 0 ? sorted[0][1].total : 1;
+
+            const html = sorted.map(([responsable, stats], index) => {
+                const percentage = (stats.listo / stats.total) * 100;
+
+                // Asignar tamaño proporcional a la carga
+                let sizeClass = 'size-1';
+                const ratio = stats.total / maxTasks;
+
+                if (index === 0 && stats.total >= 15) {
+                    sizeClass = 'size-4'; // Más grande para el responsable con más carga
+                } else if (stats.total >= 12 || ratio >= 0.7) {
+                    sizeClass = 'size-3';
+                } else if (stats.total >= 8 || ratio >= 0.5) {
+                    sizeClass = 'size-2';
+                } else {
+                    sizeClass = 'size-1';
+                }
+
+                return `
+                    <div class="responsable-card ${sizeClass}">
+                        <div class="progress-percentage">${Math.round(percentage)}%</div>
+                        <div class="responsable-header">
+                            <div class="responsable-info">
+                                <div class="responsable-name">${responsable}</div>
+                                <div class="responsable-label">Responsable</div>
+                            </div>
+                            <div class="responsable-total">${stats.total}</div>
+                        </div>
+                        <div class="responsable-body">
+                            <div class="responsable-stats">
+                                <div class="resp-stat pendiente">
+                                    <span class="resp-stat-label">Pend.</span>
+                                    <span class="resp-stat-value">${stats.pendiente}</span>
+                                </div>
+                                <div class="resp-stat en-proceso">
+                                    <span class="resp-stat-label">Proc.</span>
+                                    <span class="resp-stat-value">${stats.proceso}</span>
+                                </div>
+                                <div class="resp-stat listo">
+                                    <span class="resp-stat-label">Listo</span>
+                                    <span class="resp-stat-value">${stats.listo}</span>
+                                </div>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${percentage}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('responsablesGrid').innerHTML = html;
+        }
+
+        function updateEstadosView() {
+            const statusGroups = {
+                'pendiente': filteredTasks.filter(t => t.status === 'pendiente'),
+                'en proceso': filteredTasks.filter(t => t.status === 'en proceso'),
+                'listo': filteredTasks.filter(t => t.status === 'listo'),
+                'cancelado': filteredTasks.filter(t => t.status === 'cancelado')
+            };
+
+            const statsHTML = Object.entries(statusGroups).map(([status, tasks]) => `
+                <div class="stat-card ${status.replace(' ', '-')}">
+                    <div class="stat-label">${status}</div>
+                    <div class="stat-value">${tasks.length}</div>
+                </div>
+            `).join('');
+
+            document.getElementById('estadosStats').innerHTML = statsHTML;
+
+            const tbody = document.getElementById('estadosTableBody');
+            tbody.innerHTML = filteredTasks.map(task => `
+                <tr>
+                    <td><span class="producto-tag">${task.producto}</span></td>
+                    <td>${task.numero}</td>
+                    <td>${task.pendiente}</td>
+                    <td>${task.responsable}</td>
+                    <td><span class="status-badge status-${task.status.replace(' ', '-')}">${task.status}</span></td>
+                    <td>${task.fecha}</td>
+                </tr>
+            `).join('');
+        }
+
+        function updateProductosView() {
+            const productStats = {};
+
+            filteredTasks.forEach(task => {
+                if (!productStats[task.producto]) {
+                    productStats[task.producto] = {
+                        total: 0,
+                        pendiente: 0,
+                        proceso: 0,
+                        listo: 0
+                    };
+                }
+                productStats[task.producto].total++;
+                if (task.status === 'pendiente') productStats[task.producto].pendiente++;
+                if (task.status === 'en proceso') productStats[task.producto].proceso++;
+                if (task.status === 'listo') productStats[task.producto].listo++;
+            });
+
+            // Draw chart
+            const canvas = document.getElementById('productosChart');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const products = Object.keys(productStats);
+            const barWidth = 80;
+            const barSpacing = 40;
+            const maxHeight = 300;
+            const startX = 60;
+            const startY = 350;
+            const maxValue = Math.max(...Object.values(productStats).map(s => s.total));
+
+            products.forEach((product, index) => {
+                const x = startX + index * (barWidth + barSpacing);
+                const stats = productStats[product];
+
+                // Stacked bar
+                let currentY = startY;
+
+                // Listo
+                const listoHeight = (stats.listo / maxValue) * maxHeight;
+                ctx.fillStyle = '#66BB6A';
+                ctx.fillRect(x, currentY - listoHeight, barWidth, listoHeight);
+                currentY -= listoHeight;
+
+                // En proceso
+                const procesoHeight = (stats.proceso / maxValue) * maxHeight;
+                ctx.fillStyle = '#42A5F5';
+                ctx.fillRect(x, currentY - procesoHeight, barWidth, procesoHeight);
+                currentY -= procesoHeight;
+
+                // Pendiente
+                const pendienteHeight = (stats.pendiente / maxValue) * maxHeight;
+                ctx.fillStyle = '#FFA726';
+                ctx.fillRect(x, currentY - pendienteHeight, barWidth, pendienteHeight);
+
+                // Label
+                ctx.fillStyle = '#2c3e50';
+                ctx.font = '11px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.save();
+                ctx.translate(x + barWidth/2, startY + 20);
+                ctx.rotate(-Math.PI/4);
+                ctx.fillText(product.substring(0, 20), 0, 0);
+                ctx.restore();
+
+                // Total
+                ctx.font = 'bold 12px sans-serif';
+                ctx.fillText(stats.total, x + barWidth/2, startY - (stats.total / maxValue) * maxHeight - 10);
+            });
+
+            // Table
+            const tbody = document.getElementById('productosTableBody');
+            const sorted = Object.entries(productStats)
+                .sort((a, b) => b[1].total - a[1].total);
+
+            tbody.innerHTML = sorted.map(([producto, stats]) => {
+                const percentage = (stats.listo / stats.total) * 100;
+                return `
+                    <tr>
+                        <td><span class="producto-tag">${producto}</span></td>
+                        <td><strong>${stats.total}</strong></td>
+                        <td>${stats.pendiente}</td>
+                        <td>${stats.proceso}</td>
+                        <td>${stats.listo}</td>
+                        <td>
+                            <strong>${Math.round(percentage)}%</strong>
+                            <div class="progress-bar" style="margin-top: 0.5rem">
+                                <div class="progress-fill" style="width: ${percentage}%"></div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Inicializar
+        loadData();
+    </script>
+</body>
+</html>
