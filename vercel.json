@@ -1,24 +1,8 @@
 {
-  "version": 2,
-  "name": "creatividad-unw-dashboard",
-  "builds": [
+  "rewrites": [
     {
-      "src": "dashboard.html",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "data.json",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/",
-      "dest": "/dashboard.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
+      "source": "/",
+      "destination": "/dashboard.html"
     }
   ],
   "headers": [
