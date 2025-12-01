@@ -12,6 +12,20 @@ El dashboard está desplegado en Vercel y se actualiza automáticamente con cada
 - https://creatividad-unw-dashboard-chumbis-projects.vercel.app
 - https://creatividad-unw-dashboard-git-main-chumbis-projects.vercel.app
 
+### 🔐 Credenciales de Acceso
+
+Para acceder al dashboard, utiliza las siguientes credenciales:
+
+- **Usuario**: `unw`
+- **Contraseña**: `unw2025`
+
+El sistema incluye:
+- Página de login con autenticación
+- Verificación de sesión (localStorage)
+- Protección del dashboard
+- Función de logout
+- Visualización del usuario conectado
+
 ## 🎨 Características
 
 ### Dashboard Completo
