@@ -2,6 +2,12 @@
 
 Dashboard interactivo de seguimiento de producción de piezas creativas para UNW.
 
+## 🌐 Demo en Vivo
+
+**URL de Producción**: https://creatividad-unw-dashboard-d7cuh787n-chumbis-projects.vercel.app
+
+El dashboard está desplegado en Vercel y se actualiza automáticamente con cada push a la rama `main`.
+
 ## 🎨 Características
 
 ### Dashboard Completo
