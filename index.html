@@ -85,13 +85,16 @@
 
         input {
             width: 100%;
-            padding: 0.875rem 1rem;
+            /* Padding táctil mejorado */
+            padding: 1rem 1.25rem;
             border: 2px solid var(--border);
             border-radius: 10px;
-            font-size: 1rem;
+            /* Prevenir zoom en iOS */
+            font-size: 16px;
             transition: all 0.3s;
             font-family: inherit;
             background: var(--bg-primary);
+            -webkit-tap-highlight-color: transparent;
         }
 
         input:focus {
@@ -101,13 +104,21 @@
             box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.1);
         }
 
+        /* Feedback táctil en inputs */
+        input:active {
+            border-color: var(--accent);
+            background: white;
+        }
+
         input::placeholder {
             color: var(--text-secondary);
         }
 
         .btn-login {
             width: 100%;
-            padding: 1rem;
+            /* Altura táctil mejorada - mínimo 48px */
+            padding: 1.125rem 1.5rem;
+            min-height: 48px;
             background: var(--accent);
             color: white;
             border: none;
@@ -115,8 +126,11 @@
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             margin-top: 1rem;
+            -webkit-tap-highlight-color: transparent;
+            /* Prevenir doble tap zoom */
+            touch-action: manipulation;
         }
 
         .btn-login:hover {
@@ -125,8 +139,10 @@
             box-shadow: 0 10px 20px rgba(94, 114, 228, 0.3);
         }
 
+        /* Feedback táctil mejorado */
         .btn-login:active {
-            transform: translateY(0);
+            transform: scale(0.98);
+            box-shadow: 0 2px 8px rgba(94, 114, 228, 0.2);
         }
 
         .btn-login:disabled {
@@ -166,7 +182,7 @@
 
         .toggle-btn {
             position: absolute;
-            right: 1rem;
+            right: 0.5rem;
             top: 50%;
             transform: translateY(-50%);
             background: none;
@@ -174,12 +190,27 @@
             color: var(--text-secondary);
             cursor: pointer;
             font-size: 1.25rem;
-            padding: 0.25rem;
-            transition: color 0.2s;
+            /* Área táctil mejorada - mínimo 44x44px */
+            padding: 0.625rem;
+            min-width: 44px;
+            min-height: 44px;
+            transition: all 0.2s;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .toggle-btn:hover {
             color: var(--accent);
+            background: rgba(94, 114, 228, 0.1);
+        }
+
+        /* Feedback táctil mejorado */
+        .toggle-btn:active {
+            background: rgba(94, 114, 228, 0.2);
+            transform: translateY(-50%) scale(0.95);
         }
 
         .footer {

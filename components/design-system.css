@@ -1,0 +1,1234 @@
+/**
+ * UNW Dashboard - Design System
+ * Sistema de diseño centralizado con variables CSS, tokens y componentes reutilizables
+ * Version: 1.0.0
+ */
+
+/* ========================================
+   RESET Y BASE
+   ======================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ========================================
+   DESIGN TOKENS - Variables CSS
+   ======================================== */
+:root {
+    /* === Colores de Estado === */
+    --status-pending: #FFA726;
+    --status-pending-rgb: 255, 167, 38;
+    --status-pending-light: rgba(255, 167, 38, 0.15);
+    --status-pending-hover: #FB8C00;
+
+    --status-in-progress: #42A5F5;
+    --status-in-progress-rgb: 66, 165, 245;
+    --status-in-progress-light: rgba(66, 165, 245, 0.15);
+    --status-in-progress-hover: #2196F3;
+
+    --status-completed: #66BB6A;
+    --status-completed-rgb: 102, 187, 106;
+    --status-completed-light: rgba(102, 187, 106, 0.15);
+    --status-completed-hover: #4CAF50;
+
+    --status-cancelled: #EF5350;
+    --status-cancelled-rgb: 239, 83, 80;
+    --status-cancelled-light: rgba(239, 83, 80, 0.15);
+    --status-cancelled-hover: #E53935;
+
+    /* === Colores Principales === */
+    --color-primary: #5e72e4;
+    --color-primary-rgb: 94, 114, 228;
+    --color-primary-hover: #4c63d2;
+    --color-primary-active: #3d54c0;
+    --color-primary-light: rgba(94, 114, 228, 0.1);
+
+    --color-secondary: #764ba2;
+    --color-secondary-rgb: 118, 75, 162;
+
+    /* === Colores de Fondo === */
+    --bg-primary: #f5f7fa;
+    --bg-secondary: #e8ecf1;
+    --bg-tertiary: #d9dee5;
+    --bg-card: #ffffff;
+    --bg-overlay: rgba(0, 0, 0, 0.5);
+
+    /* === Colores de Texto === */
+    --text-primary: #2c3e50;
+    --text-secondary: #7f8c8d;
+    --text-tertiary: #95a5a6;
+    --text-inverse: #ffffff;
+    --text-muted: #bdc3c7;
+
+    /* === Bordes === */
+    --border-color: #e1e8ed;
+    --border-color-hover: #cbd5e0;
+    --border-color-focus: var(--color-primary);
+    --border-width: 1px;
+    --border-width-thick: 2px;
+
+    /* === Sombras === */
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.12);
+    --shadow-2xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+    --shadow-focus: 0 0 0 3px var(--color-primary-light);
+    --shadow-focus-error: 0 0 0 3px rgba(239, 83, 80, 0.1);
+
+    /* === Espaciado === */
+    --space-xs: 0.25rem;    /* 4px */
+    --space-sm: 0.5rem;     /* 8px */
+    --space-md: 0.75rem;    /* 12px */
+    --space-lg: 1rem;       /* 16px */
+    --space-xl: 1.5rem;     /* 24px */
+    --space-2xl: 2rem;      /* 32px */
+    --space-3xl: 3rem;      /* 48px */
+    --space-4xl: 4rem;      /* 64px */
+
+    /* === Bordes Redondeados === */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-2xl: 20px;
+    --radius-full: 9999px;
+
+    /* === Tipografía === */
+    --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+    --font-family-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+
+    --font-size-xs: 0.625rem;   /* 10px */
+    --font-size-sm: 0.75rem;    /* 12px */
+    --font-size-base: 0.875rem; /* 14px */
+    --font-size-md: 1rem;       /* 16px */
+    --font-size-lg: 1.125rem;   /* 18px */
+    --font-size-xl: 1.25rem;    /* 20px */
+    --font-size-2xl: 1.5rem;    /* 24px */
+    --font-size-3xl: 2rem;      /* 32px */
+    --font-size-4xl: 2.5rem;    /* 40px */
+
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-extrabold: 800;
+
+    --line-height-tight: 1.2;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.6;
+    --line-height-loose: 1.8;
+
+    --letter-spacing-tight: -0.025em;
+    --letter-spacing-normal: 0;
+    --letter-spacing-wide: 0.025em;
+    --letter-spacing-wider: 0.05em;
+
+    /* === Transiciones === */
+    --transition-fast: 150ms ease-in-out;
+    --transition-base: 200ms ease-in-out;
+    --transition-slow: 300ms ease-in-out;
+    --transition-slower: 500ms ease-in-out;
+
+    --transition-timing-ease: ease;
+    --transition-timing-ease-in: ease-in;
+    --transition-timing-ease-out: ease-out;
+    --transition-timing-ease-in-out: ease-in-out;
+    --transition-timing-cubic: cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* === Z-Index === */
+    --z-index-dropdown: 1000;
+    --z-index-sticky: 1020;
+    --z-index-fixed: 1030;
+    --z-index-modal-backdrop: 1040;
+    --z-index-modal: 1050;
+    --z-index-popover: 1060;
+    --z-index-tooltip: 1070;
+
+    /* === Breakpoints === */
+    --breakpoint-sm: 640px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 1024px;
+    --breakpoint-xl: 1280px;
+    --breakpoint-2xl: 1536px;
+}
+
+/* ========================================
+   BASE STYLES
+   ======================================== */
+body {
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-md);
+    line-height: var(--line-height-normal);
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+/* === Screen Reader Only === */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* === Skip Link === */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--color-primary);
+    color: var(--text-inverse);
+    padding: var(--space-md) var(--space-lg);
+    text-decoration: none;
+    font-weight: var(--font-weight-semibold);
+    z-index: var(--z-index-tooltip);
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* ========================================
+   COMPONENTE: BOTONES
+   ======================================== */
+
+/* === Base Button === */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    padding: var(--space-md) var(--space-xl);
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-tight);
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    border: var(--border-width) solid transparent;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-base);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-focus);
+}
+
+.btn:disabled,
+.btn.is-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* === Button Variants === */
+
+/* Primary Button */
+.btn--primary {
+    background-color: var(--color-primary);
+    color: var(--text-inverse);
+    border-color: var(--color-primary);
+}
+
+.btn--primary:hover:not(:disabled) {
+    background-color: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn--primary:active:not(:disabled) {
+    background-color: var(--color-primary-active);
+    transform: translateY(0);
+}
+
+/* Secondary Button */
+.btn--secondary {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+.btn--secondary:hover:not(:disabled) {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn--secondary:active:not(:disabled) {
+    background-color: var(--bg-tertiary);
+    transform: translateY(0);
+}
+
+/* Outline Button */
+.btn--outline {
+    background-color: transparent;
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.btn--outline:hover:not(:disabled) {
+    background-color: var(--color-primary-light);
+    border-color: var(--color-primary-hover);
+}
+
+/* Ghost Button */
+.btn--ghost {
+    background-color: transparent;
+    color: var(--text-primary);
+    border-color: transparent;
+}
+
+.btn--ghost:hover:not(:disabled) {
+    background-color: var(--bg-secondary);
+}
+
+/* Danger Button */
+.btn--danger {
+    background-color: var(--status-cancelled);
+    color: var(--text-inverse);
+    border-color: var(--status-cancelled);
+}
+
+.btn--danger:hover:not(:disabled) {
+    background-color: var(--status-cancelled-hover);
+    border-color: var(--status-cancelled-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* === Button Sizes === */
+.btn--xs {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--font-size-xs);
+    border-radius: var(--radius-sm);
+}
+
+.btn--sm {
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--font-size-sm);
+    border-radius: var(--radius-sm);
+}
+
+.btn--lg {
+    padding: var(--space-lg) var(--space-2xl);
+    font-size: var(--font-size-lg);
+    border-radius: var(--radius-lg);
+}
+
+.btn--xl {
+    padding: var(--space-xl) var(--space-3xl);
+    font-size: var(--font-size-xl);
+    border-radius: var(--radius-xl);
+}
+
+/* === Button States === */
+.btn--block {
+    display: flex;
+    width: 100%;
+}
+
+.btn--loading {
+    position: relative;
+    color: transparent;
+    pointer-events: none;
+}
+
+.btn--loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: btn-spin 0.6s linear infinite;
+}
+
+@keyframes btn-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ========================================
+   COMPONENTE: INPUTS Y FORM CONTROLS
+   ======================================== */
+
+/* === Form Group === */
+.form-group {
+    margin-bottom: var(--space-xl);
+}
+
+/* === Label === */
+.form-label {
+    display: block;
+    margin-bottom: var(--space-sm);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+    line-height: var(--line-height-tight);
+}
+
+.form-label--required::after {
+    content: '*';
+    color: var(--status-cancelled);
+    margin-left: var(--space-xs);
+}
+
+/* === Input Base === */
+.form-input,
+.form-select,
+.form-textarea {
+    display: block;
+    width: 100%;
+    padding: var(--space-md) var(--space-lg);
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-normal);
+    line-height: var(--line-height-normal);
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
+    background-clip: padding-box;
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--radius-md);
+    transition: border-color var(--transition-base),
+                box-shadow var(--transition-base),
+                background-color var(--transition-base);
+    appearance: none;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+    color: var(--text-secondary);
+    opacity: 1;
+}
+
+.form-input:hover:not(:disabled),
+.form-select:hover:not(:disabled),
+.form-textarea:hover:not(:disabled) {
+    border-color: var(--border-color-hover);
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--border-color-focus);
+    background-color: var(--bg-card);
+    box-shadow: var(--shadow-focus);
+}
+
+.form-input:disabled,
+.form-select:disabled,
+.form-textarea:disabled {
+    background-color: var(--bg-secondary);
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* === Input Variants === */
+.form-input--error,
+.form-select--error,
+.form-textarea--error {
+    border-color: var(--status-cancelled);
+}
+
+.form-input--error:focus,
+.form-select--error:focus,
+.form-textarea--error:focus {
+    box-shadow: var(--shadow-focus-error);
+}
+
+.form-input--success {
+    border-color: var(--status-completed);
+}
+
+/* === Input Sizes === */
+.form-input--sm,
+.form-select--sm {
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--font-size-sm);
+    border-radius: var(--radius-sm);
+}
+
+.form-input--lg,
+.form-select--lg {
+    padding: var(--space-lg) var(--space-xl);
+    font-size: var(--font-size-lg);
+    border-radius: var(--radius-lg);
+}
+
+/* === Textarea === */
+.form-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-textarea--no-resize {
+    resize: none;
+}
+
+/* === Select === */
+.form-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%237f8c8d' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right var(--space-lg) center;
+    background-size: 12px;
+    padding-right: var(--space-3xl);
+}
+
+/* === Input Group (con iconos) === */
+.input-group {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    width: 100%;
+}
+
+.input-group-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.input-group-icon--left {
+    left: var(--space-lg);
+}
+
+.input-group-icon--right {
+    right: var(--space-lg);
+}
+
+.input-group--icon-left .form-input {
+    padding-left: var(--space-3xl);
+}
+
+.input-group--icon-right .form-input {
+    padding-right: var(--space-3xl);
+}
+
+/* === Search Input === */
+.form-input--search {
+    padding-left: var(--space-3xl);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237f8c8d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cpath d='m21 21-4.35-4.35'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: left var(--space-lg) center;
+    background-size: 16px;
+}
+
+/* === Date Input === */
+.form-input--date {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%235e72e4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Cline x1='16' y1='2' x2='16' y2='6'%3E%3C/line%3E%3Cline x1='8' y1='2' x2='8' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='10' x2='21' y2='10'%3E%3C/line%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right var(--space-lg) center;
+    background-size: 18px;
+    padding-right: var(--space-3xl);
+}
+
+/* Estilos del calendario interno */
+.form-input--date::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0;
+    width: 18px;
+    height: 18px;
+    margin-right: var(--space-lg);
+}
+
+/* === Helper Text === */
+.form-help {
+    display: block;
+    margin-top: var(--space-sm);
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+.form-error {
+    display: block;
+    margin-top: var(--space-sm);
+    font-size: var(--font-size-sm);
+    color: var(--status-cancelled);
+    font-weight: var(--font-weight-medium);
+}
+
+/* === Checkbox y Radio === */
+.form-check {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+}
+
+.form-check-input {
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    flex-shrink: 0;
+    cursor: pointer;
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--radius-sm);
+    background-color: var(--bg-card);
+    transition: all var(--transition-base);
+}
+
+.form-check-input:checked {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.form-check-input:focus {
+    outline: none;
+    box-shadow: var(--shadow-focus);
+}
+
+.form-check-label {
+    font-size: var(--font-size-base);
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+/* ========================================
+   COMPONENTE: CARDS
+   ======================================== */
+
+/* === Base Card === */
+.card {
+    background-color: var(--bg-card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition-base),
+                box-shadow var(--transition-base);
+    overflow: hidden;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+.card--interactive {
+    cursor: pointer;
+}
+
+.card--interactive:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+}
+
+/* === Card Header === */
+.card-header {
+    padding: var(--space-xl);
+    border-bottom: var(--border-width) solid var(--border-color);
+}
+
+.card-title {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.card-subtitle {
+    font-size: var(--font-size-base);
+    color: var(--text-secondary);
+    margin-top: var(--space-xs);
+}
+
+/* === Card Body === */
+.card-body {
+    padding: var(--space-xl);
+}
+
+/* === Card Footer === */
+.card-footer {
+    padding: var(--space-xl);
+    border-top: var(--border-width) solid var(--border-color);
+    background-color: var(--bg-primary);
+}
+
+/* === Card Variants === */
+.card--bordered {
+    border: var(--border-width) solid var(--border-color);
+    box-shadow: none;
+}
+
+.card--elevated {
+    box-shadow: var(--shadow-xl);
+}
+
+.card--flat {
+    box-shadow: none;
+}
+
+/* ========================================
+   COMPONENTE: BADGES
+   ======================================== */
+
+/* === Base Badge === */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-xs) var(--space-md);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-tight);
+    text-align: center;
+    white-space: nowrap;
+    border-radius: var(--radius-full);
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
+}
+
+/* === Badge Variants === */
+.badge--pending {
+    background-color: var(--status-pending-light);
+    color: var(--status-pending);
+}
+
+.badge--in-progress {
+    background-color: var(--status-in-progress-light);
+    color: var(--status-in-progress);
+}
+
+.badge--completed {
+    background-color: var(--status-completed-light);
+    color: var(--status-completed);
+}
+
+.badge--cancelled {
+    background-color: var(--status-cancelled-light);
+    color: var(--status-cancelled);
+}
+
+.badge--primary {
+    background-color: var(--color-primary-light);
+    color: var(--color-primary);
+}
+
+.badge--neutral {
+    background-color: var(--bg-secondary);
+    color: var(--text-secondary);
+}
+
+/* === Badge Sizes === */
+.badge--sm {
+    padding: 2px var(--space-sm);
+    font-size: var(--font-size-xs);
+}
+
+.badge--lg {
+    padding: var(--space-sm) var(--space-lg);
+    font-size: var(--font-size-base);
+}
+
+/* === Badge con Dot === */
+.badge--dot {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.badge--dot::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: currentColor;
+}
+
+/* ========================================
+   COMPONENTE: TABS
+   ======================================== */
+
+/* === Tab Container === */
+.tabs {
+    display: flex;
+    gap: var(--space-md);
+    background-color: var(--bg-card);
+    padding: var(--space-sm);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+.tabs::-webkit-scrollbar {
+    height: 4px;
+}
+
+.tabs::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+    border-radius: var(--radius-sm);
+}
+
+.tabs::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: var(--radius-sm);
+}
+
+/* === Tab Button === */
+.tab {
+    flex: 1;
+    min-width: 120px;
+    padding: var(--space-md) var(--space-xl);
+    background-color: transparent;
+    color: var(--text-secondary);
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    white-space: nowrap;
+    position: relative;
+}
+
+.tab:hover {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.tab:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-focus);
+}
+
+.tab--active {
+    background-color: var(--color-primary);
+    color: var(--text-inverse);
+}
+
+.tab--active:hover {
+    background-color: var(--color-primary-hover);
+    color: var(--text-inverse);
+}
+
+/* === Tab Panels === */
+.tab-panels {
+    margin-top: var(--space-2xl);
+}
+
+.tab-panel {
+    display: none;
+}
+
+.tab-panel--active {
+    display: block;
+    animation: fadeIn var(--transition-base);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========================================
+   COMPONENTE: TABLE
+   ======================================== */
+
+/* === Table Container === */
+.table-container {
+    background-color: var(--bg-card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    overflow-x: auto;
+}
+
+/* === Table === */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-size-base);
+}
+
+.table thead {
+    background-color: var(--bg-primary);
+}
+
+.table th {
+    padding: var(--space-lg);
+    text-align: left;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+    white-space: nowrap;
+}
+
+.table td {
+    padding: var(--space-lg);
+    border-top: var(--border-width) solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.table tbody tr {
+    transition: background-color var(--transition-fast);
+}
+
+.table tbody tr:hover {
+    background-color: var(--bg-primary);
+}
+
+/* === Table Variants === */
+.table--striped tbody tr:nth-child(odd) {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.table--bordered {
+    border: var(--border-width) solid var(--border-color);
+}
+
+.table--bordered th,
+.table--bordered td {
+    border: var(--border-width) solid var(--border-color);
+}
+
+/* === Responsive Table === */
+@media (max-width: 768px) {
+    .table-responsive {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* ========================================
+   COMPONENTE: STATS CARD
+   ======================================== */
+
+.stat-card {
+    background-color: var(--bg-card);
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition-base),
+                box-shadow var(--transition-base);
+    cursor: pointer;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.stat-label {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: var(--space-sm);
+}
+
+.stat-value {
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-extrabold);
+    line-height: var(--line-height-tight);
+    color: var(--text-primary);
+}
+
+/* === Stat Card Variants === */
+.stat-card--pending .stat-value {
+    color: var(--status-pending);
+}
+
+.stat-card--in-progress .stat-value {
+    color: var(--status-in-progress);
+}
+
+.stat-card--completed .stat-value {
+    color: var(--status-completed);
+}
+
+.stat-card--cancelled .stat-value {
+    color: var(--status-cancelled);
+}
+
+.stat-card--total .stat-value {
+    color: var(--color-primary);
+}
+
+/* ========================================
+   COMPONENTE: ALERT / MESSAGE
+   ======================================== */
+
+.alert {
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-xl);
+    font-size: var(--font-size-base);
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-md);
+    animation: slideInDown var(--transition-slow);
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.alert--error {
+    background-color: var(--status-cancelled-light);
+    color: var(--status-cancelled);
+    border-left: 4px solid var(--status-cancelled);
+}
+
+.alert--success {
+    background-color: var(--status-completed-light);
+    color: var(--status-completed);
+    border-left: 4px solid var(--status-completed);
+}
+
+.alert--warning {
+    background-color: var(--status-pending-light);
+    color: var(--status-pending);
+    border-left: 4px solid var(--status-pending);
+}
+
+.alert--info {
+    background-color: var(--status-in-progress-light);
+    color: var(--status-in-progress);
+    border-left: 4px solid var(--status-in-progress);
+}
+
+/* ========================================
+   COMPONENTE: FILTERS
+   ======================================== */
+
+.filters {
+    background-color: var(--bg-card);
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    margin-bottom: var(--space-2xl);
+}
+
+.filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    align-items: center;
+}
+
+.filter-label {
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-secondary);
+    font-size: var(--font-size-base);
+}
+
+/* ========================================
+   COMPONENTE: CONTAINER
+   ======================================== */
+
+.container {
+    width: 100%;
+    max-width: 1600px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--space-2xl);
+    padding-right: var(--space-2xl);
+}
+
+.container--sm {
+    max-width: 640px;
+}
+
+.container--md {
+    max-width: 768px;
+}
+
+.container--lg {
+    max-width: 1024px;
+}
+
+.container--xl {
+    max-width: 1280px;
+}
+
+/* ========================================
+   LAYOUT UTILITIES
+   ======================================== */
+
+/* === Grid === */
+.grid {
+    display: grid;
+    gap: var(--space-xl);
+}
+
+.grid--2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.grid--3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.grid--4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.grid--responsive {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+/* === Flex === */
+.flex {
+    display: flex;
+}
+
+.flex--center {
+    justify-content: center;
+    align-items: center;
+}
+
+.flex--between {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.flex--wrap {
+    flex-wrap: wrap;
+}
+
+.flex--gap-sm {
+    gap: var(--space-sm);
+}
+
+.flex--gap-md {
+    gap: var(--space-md);
+}
+
+.flex--gap-lg {
+    gap: var(--space-lg);
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 768px) {
+    .container {
+        padding-left: var(--space-lg);
+        padding-right: var(--space-lg);
+    }
+
+    .grid--2,
+    .grid--3,
+    .grid--4 {
+        grid-template-columns: 1fr;
+    }
+
+    .tabs {
+        overflow-x: auto;
+    }
+
+    .tab {
+        min-width: 100px;
+    }
+
+    .filter-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-group > * {
+        width: 100%;
+    }
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+.animate-shake {
+    animation: shake var(--transition-slow);
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ========================================
+   FOCUS STATES (Accesibilidad)
+   ======================================== */
+
+*:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-focus);
+}
+
+/* ========================================
+   DARK MODE SUPPORT (Preparado para futuro)
+   ======================================== */
+
+@media (prefers-color-scheme: dark) {
+    /* Variables para modo oscuro pueden agregarse aquí */
+}
